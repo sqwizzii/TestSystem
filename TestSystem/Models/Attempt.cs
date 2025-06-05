@@ -1,14 +1,18 @@
-﻿namespace TestSystem.Models;
+﻿using System;
 
-public class Attempt
+namespace TestSystemAPI.Models
 {
-    public int Id { get; set; }
-    public int UserId { get; set; }
-    public User User { get; set; }
+    public class Attempt
+    {
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public int TestId { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public DateTime Date { get; set; }
+        public int Score { get; set; }
 
-    public int TestId { get; set; }
-    public Test Test { get; set; }
-
-    public DateTime StartTime { get; set; }
-    public int Score { get; set; }
+        public User? User { get; set; }
+        public Test? Test { get; set; }
+    }
 }

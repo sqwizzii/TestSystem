@@ -1,10 +1,12 @@
-﻿namespace TestSystem.Models;
+﻿using System.Collections.Generic;
 
-public class Test
+namespace TestSystemAPI.Models
 {
-    public int Id { get; set; }
-    public string Title { get; set; }
-
-    public ICollection<Question> Questions { get; set; }
-    public ICollection<Attempt> Attempts { get; set; }
+    public class Test
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = null!;
+        public string Description { get; set; } = null!;
+        public ICollection<Question> Questions { get; set; } = new List<Question>();
+    }
 }

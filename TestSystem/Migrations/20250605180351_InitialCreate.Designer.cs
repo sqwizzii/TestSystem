@@ -5,13 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using TestSystemAPI.Data;
 
 #nullable disable
 
-namespace TestSystem.Migrations
+namespace TestSystemAPI.Migrations
 {
-    [DbContext(typeof(TestSystemContext))]
-    [Migration("20250605162030_InitialCreate")]
+    [DbContext(typeof(TestSystemDbContext))]
+    [Migration("20250605180351_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,7 +25,7 @@ namespace TestSystem.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("TestSystem.Models.Answer", b =>
+            modelBuilder.Entity("TestSystemAPI.Models.Answer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -49,7 +50,7 @@ namespace TestSystem.Migrations
                     b.ToTable("Answers");
                 });
 
-            modelBuilder.Entity("TestSystem.Models.Attempt", b =>
+            modelBuilder.Entity("TestSystemAPI.Models.Attempt", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,11 +58,11 @@ namespace TestSystem.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("Score")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("TestId")
                         .HasColumnType("integer");
@@ -78,7 +79,7 @@ namespace TestSystem.Migrations
                     b.ToTable("Attempts");
                 });
 
-            modelBuilder.Entity("TestSystem.Models.Image", b =>
+            modelBuilder.Entity("TestSystemAPI.Models.Image", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,35 +87,26 @@ namespace TestSystem.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<byte[]>("Data")
+                    b.Property<string>("Base64Content")
                         .IsRequired()
-                        .HasColumnType("bytea");
+                        .HasColumnType("text");
 
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("QuestionId")
-                        .IsUnique();
 
                     b.ToTable("Images");
                 });
 
-            modelBuilder.Entity("TestSystem.Models.Question", b =>
+            modelBuilder.Entity("TestSystemAPI.Models.Question", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsMultipleChoice")
-                        .HasColumnType("boolean");
 
                     b.Property<int>("TestId")
                         .HasColumnType("integer");
@@ -123,9 +115,6 @@ namespace TestSystem.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Weight")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("TestId");
@@ -133,13 +122,16 @@ namespace TestSystem.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("TestSystem.Models.Test", b =>
+            modelBuilder.Entity("TestSystemAPI.Models.Test", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -150,7 +142,7 @@ namespace TestSystem.Migrations
                     b.ToTable("Tests");
                 });
 
-            modelBuilder.Entity("TestSystem.Models.User", b =>
+            modelBuilder.Entity("TestSystemAPI.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -158,7 +150,11 @@ namespace TestSystem.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Login")
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -170,14 +166,18 @@ namespace TestSystem.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TestSystem.Models.Answer", b =>
+            modelBuilder.Entity("TestSystemAPI.Models.Answer", b =>
                 {
-                    b.HasOne("TestSystem.Models.Question", "Question")
+                    b.HasOne("TestSystemAPI.Models.Question", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -186,16 +186,16 @@ namespace TestSystem.Migrations
                     b.Navigation("Question");
                 });
 
-            modelBuilder.Entity("TestSystem.Models.Attempt", b =>
+            modelBuilder.Entity("TestSystemAPI.Models.Attempt", b =>
                 {
-                    b.HasOne("TestSystem.Models.Test", "Test")
-                        .WithMany("Attempts")
+                    b.HasOne("TestSystemAPI.Models.Test", "Test")
+                        .WithMany()
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TestSystem.Models.User", "User")
-                        .WithMany("Attempts")
+                    b.HasOne("TestSystemAPI.Models.User", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -205,20 +205,9 @@ namespace TestSystem.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TestSystem.Models.Image", b =>
+            modelBuilder.Entity("TestSystemAPI.Models.Question", b =>
                 {
-                    b.HasOne("TestSystem.Models.Question", "Question")
-                        .WithOne("Image")
-                        .HasForeignKey("TestSystem.Models.Image", "QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Question");
-                });
-
-            modelBuilder.Entity("TestSystem.Models.Question", b =>
-                {
-                    b.HasOne("TestSystem.Models.Test", "Test")
+                    b.HasOne("TestSystemAPI.Models.Test", "Test")
                         .WithMany("Questions")
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -227,23 +216,14 @@ namespace TestSystem.Migrations
                     b.Navigation("Test");
                 });
 
-            modelBuilder.Entity("TestSystem.Models.Question", b =>
+            modelBuilder.Entity("TestSystemAPI.Models.Question", b =>
                 {
                     b.Navigation("Answers");
-
-                    b.Navigation("Image");
                 });
 
-            modelBuilder.Entity("TestSystem.Models.Test", b =>
+            modelBuilder.Entity("TestSystemAPI.Models.Test", b =>
                 {
-                    b.Navigation("Attempts");
-
                     b.Navigation("Questions");
-                });
-
-            modelBuilder.Entity("TestSystem.Models.User", b =>
-                {
-                    b.Navigation("Attempts");
                 });
 #pragma warning restore 612, 618
         }

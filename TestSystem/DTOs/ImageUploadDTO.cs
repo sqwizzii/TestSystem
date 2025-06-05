@@ -1,11 +1,9 @@
-﻿namespace TestSystemAPI.Models
+﻿namespace TestSystemAPI.DTOs
 {
-    public class Image
+    public class ImageUploadDTO
     {
-        public int Id { get; set; }
         public string FileName { get; set; } = null!;
-        public string FilePath { get; set; } = null!;
-
+        public string Base64Data { get; set; } = null!;
         public int? TestId { get; set; }
         public int? QuestionId { get; set; }
     }
