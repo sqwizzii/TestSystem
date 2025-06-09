@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Кабінет вчителя";
+}
+
+<h1 style="text-align:center; margin-top:30px;">👨‍🏫 Кабінет вчителя</h1>
+
+<div style="display:flex; justify-content:center; gap:20px; margin-top:50px;">
+
+    <a href="/teacher/create-test" style="text-decoration:none;">
+        <button style="
+            padding:15px 30px;
+            background-color:#4CAF50;
+            color:white;
+            font-size:18px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            transition:0.3s;
+        " onmouseover="this.style.backgroundColor='#45a049'" onmouseout="this.style.backgroundColor='#4CAF50'">
+            ➕ Створити тест
+        </button>
+    </a>
+
+    <a href="/teacher/add-question/1" style="text-decoration:none;">
+        <button style="
+            padding:15px 30px;
+            background-color:#2196F3;
+            color:white;
+            font-size:18px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            transition:0.3s;
+        " onmouseover="this.style.backgroundColor='#0b7dda'" onmouseout="this.style.backgroundColor='#2196F3'">
+            ➕ Додати запитання
+        </button>
+    </a>
+
+</div>
+
+<p style="text-align:center; margin-top:30px; font-size:14px; color:gray;">
+    🔔 Примітка: Ви можете додавати запитання лише до існуючих тестів
+</p>

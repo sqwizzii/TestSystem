@@ -28,4 +28,9 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Teacher}/{action=CreateTest}/{id?}");
+
+
 app.Run();

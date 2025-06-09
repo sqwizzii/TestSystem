@@ -1,0 +1,15 @@
+﻿@model TestSystem.Entities.Test
+
+<h2>Створення тесту</h2>
+
+<form asp-action="CreateTest" method="post">
+    <div>
+        <label>Назва тесту</label>
+        <input asp-for="Title" />
+    </div>
+    <div>
+        <label>Опис</label>
+        <textarea asp-for="Description"></textarea>
+    </div>
+    <button type="submit">Створити</button>
+</form>

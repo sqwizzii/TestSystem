@@ -1,0 +1,17 @@
+﻿@model TestSystem.Entities.Question
+
+<h2>Додати питання</h2>
+
+<form asp-action="AddQuestion" method="post">
+    <input type="hidden" asp-for="TestId" />
+
+    <div>
+        <label>Текст питання</label>
+        <input asp-for="Text" />
+    </div>
+    <div>
+        <label>Вага питання</label>
+        <input asp-for="Weight" type="number" />
+    </div>
+    <button type="submit">Додати</button>
+</form>
