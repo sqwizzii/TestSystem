@@ -1,0 +1,25 @@
+﻿@model List<TestSystem.Entities.Test>
+
+<h2>Список тестів</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Назва</th>
+            <th>Дії</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var test in Model)
+        {
+            <tr>
+                <td>@test.Id</td>
+                <td>@test.Title</td>
+                <td>
+                    <a href="/teacher/add-question/@test.Id">Додати запитання</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

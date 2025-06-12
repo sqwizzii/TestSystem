@@ -1,15 +1,22 @@
 ﻿@model TestSystem.Entities.Test
 
-<h2>Створення тесту</h2>
+@{
+    ViewData["Title"] = "Створення тесту";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
 
-<form asp-action="CreateTest" method="post">
-    <div>
-        <label>Назва тесту</label>
-        <input asp-for="Title" />
-    </div>
-    <div>
-        <label>Опис</label>
-        <textarea asp-for="Description"></textarea>
-    </div>
-    <button type="submit">Створити</button>
-</form>
+<div class="container mt-5">
+    <h2 class="mb-4">Створення тесту</h2>
+
+    <form method="post">
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label">Назва тесту</label>
+            <input asp-for="Title" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label">Опис</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Створити</button>
+    </form>
+</div>

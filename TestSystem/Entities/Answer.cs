@@ -7,6 +7,7 @@
         public bool IsCorrect { get; set; }
 
         public int QuestionId { get; set; }
-        public Question Question { get; set; } = null!;
+        public List<Question> Questions { get; set; } = null!;
+        public Question Question { get; set; }
     }
 }

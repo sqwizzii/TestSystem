@@ -1,0 +1,36 @@
+﻿@model TestSystem.Entities.Test
+
+<h2>Тест: @Model.Title</h2>
+
+<a class="btn btn-primary" asp-controller="Teacher" asp-action="AddQuestion" asp-route-testId="@Model.Id">Додати питання</a>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Текст питання</th>
+            <th>Відповіді</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var index = 1;
+        }
+
+        @foreach (var q in Model.Questions)
+        {
+            <tr>
+                <td>@index</td>
+                <td>@q.Text</td>
+                <td>
+                    <ul>
+                        @foreach (var a in q.Answers)
+                        {
+                            <li>@a.Text (@(a.IsCorrect ? "правильна" : "неправильна"))</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+            index++;
+        }
+</table>

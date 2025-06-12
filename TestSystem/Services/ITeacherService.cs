@@ -1,7 +1,13 @@
 ﻿using TestSystem.Entities;
 
-public interface ITeacherService
+namespace TestSystem.Services
 {
-    Task CreateTestAsync(Test test);
-    Task AddQuestionAsync(Question question);
+    public interface ITeacherService
+    {
+        Task CreateTestAsync(Test test);
+        Task AddQuestionAsync(Question question);
+        Task AddAnswerAsync(Answer answer);
+        IEnumerable<Test> GetAllTests();
+
+    }
 }

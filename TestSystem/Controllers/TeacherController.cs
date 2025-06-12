@@ -1,64 +1,55 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TestSystem.Data;
 using TestSystem.Entities;
-using TestSystem.Services;
 
-namespace TestSystem.Controllers
+using Microsoft.EntityFrameworkCore;
+using TestSystem.Data;
+using TestSystem.Entities;
+
+namespace TestApp.Controllers
 {
-    [Route("teacher")]
     public class TeacherController : Controller
     {
-        private readonly ITeacherService _teacherService;
+        private readonly ApplicationDbContext _context;
 
-        public TeacherController(ITeacherService teacherService)
+        public TeacherController(ApplicationDbContext context)
         {
-            _teacherService = teacherService;
+            _context = context;
         }
 
-        // Головна сторінка кабінету вчителя
-        [HttpGet("")]
-        public IActionResult Index()
+        // GET: /teacher/tests
+        [HttpGet("/teacher/tests")]
+        public async Task<IActionResult> AllTests()
         {
-            return View();
+            var tests = await _context.Tests.ToListAsync();
+            return View("AllTests", tests);
         }
 
-        // Сторінка створення тесту (GET)
-        [HttpGet("create-test")]
+        // GET: /teacher/create-test
+        [HttpGet("/teacher/create-test")]
         public IActionResult CreateTest()
         {
             return View();
         }
 
-        // Обробка створення тесту (POST)
-        [HttpPost("create-test")]
+        // POST: /teacher/create-test
+        [HttpPost("/teacher/create-test")]
         public async Task<IActionResult> CreateTest(Test test)
         {
-            if (ModelState.IsValid)
-            {
-                await _teacherService.CreateTestAsync(test);
-                return RedirectToAction("Index");
-            }
+            if (!ModelState.IsValid) return View(test);
 
-            return View(test);
+            _context.Tests.Add(test);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("AllTests");
         }
 
-        // Сторінка додавання запитання (GET)
-        [HttpGet("add-question/{testId}")]
+        // GET: /teacher/add-question/{testId}
+        [HttpGet("/teacher/add-question/{testId}")]
         public IActionResult AddQuestion(int testId)
         {
-            return View(new Question { TestId = testId });
-        }
-
-        // Обробка додавання запитання (POST)
-        [HttpPost("add-question")]
-        public async Task<IActionResult> AddQuestion(Question question)
-        {
-            if (ModelState.IsValid)
-            {
-                await _teacherService.AddQuestionAsync(question);
-                return RedirectToAction("AddQuestion", new { testId = question.TestId });
-            }
-
-            return View(question);
+            ViewBag.TestId = testId;
+            return View(); // створиш свою сторінку
         }
     }
 }

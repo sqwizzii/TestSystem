@@ -1,17 +1,23 @@
 ﻿@model TestSystem.Entities.Question
 
+@{
+    ViewData["Title"] = "Додавання запитання";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
 <h2>Додати питання</h2>
 
 <form asp-action="AddQuestion" method="post">
-    <input type="hidden" asp-for="TestId" />
+    <div class="form-group">
+        <label asp-for="Text"></label>
+        <input asp-for="Text" class="form-control" />
+    </div>
 
-    <div>
-        <label>Текст питання</label>
-        <input asp-for="Text" />
+    <div class="form-group">
+        <label>Оберіть тест</label>
+        <select asp-for="TestId" class="form-control" asp-items="ViewBag.Tests"></select>
     </div>
-    <div>
-        <label>Вага питання</label>
-        <input asp-for="Weight" type="number" />
-    </div>
-    <button type="submit">Додати</button>
+
+    <button type="submit" class="btn btn-primary">Додати</button>
 </form>
