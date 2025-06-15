@@ -4,33 +4,39 @@ using TestSystem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Додаємо Razor Pages
 builder.Services.AddRazorPages();
 
+// Додаємо DbContext з PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Додаємо сервіси
 builder.Services.AddScoped<ITestService, TestService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
+
 var app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
+// Обробка помилок
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
 }
+
+// Підключення статичних файлів (css, js, зображення)
 app.UseStaticFiles();
 
+// Роутінг
 app.UseRouting();
 
 app.UseAuthorization();
 
+// Підключення Razor Pages
 app.MapRazorPages();
 
+// Підключення контролерів
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Teacher}/{action=CreateTest}/{id?}");
-
 
 app.Run();

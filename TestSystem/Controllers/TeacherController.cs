@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TestSystem.Data;
-using TestSystem.Entities;
-
 using Microsoft.EntityFrameworkCore;
 using TestSystem.Data;
 using TestSystem.Entities;
+using TestSystem.Models;
 
-namespace TestApp.Controllers
+namespace TestSystem.Controllers
 {
+    [Route("teacher")]
     public class TeacherController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -17,26 +16,27 @@ namespace TestApp.Controllers
             _context = context;
         }
 
-        // GET: /teacher/tests
-        [HttpGet("/teacher/tests")]
+        // [1] Список усіх тестів
+        [HttpGet("")]
+        [HttpGet("tests")]
         public async Task<IActionResult> AllTests()
         {
             var tests = await _context.Tests.ToListAsync();
             return View("AllTests", tests);
         }
 
-        // GET: /teacher/create-test
-        [HttpGet("/teacher/create-test")]
+        // [2] Створити тест
+        [HttpGet("create-test")]
         public IActionResult CreateTest()
         {
             return View();
         }
 
-        // POST: /teacher/create-test
-        [HttpPost("/teacher/create-test")]
+        [HttpPost("create-test")]
         public async Task<IActionResult> CreateTest(Test test)
         {
-            if (!ModelState.IsValid) return View(test);
+            if (!ModelState.IsValid)
+                return View(test);
 
             _context.Tests.Add(test);
             await _context.SaveChangesAsync();
@@ -44,12 +44,74 @@ namespace TestApp.Controllers
             return RedirectToAction("AllTests");
         }
 
-        // GET: /teacher/add-question/{testId}
-        [HttpGet("/teacher/add-question/{testId}")]
+        // [3] Додати питання до тесту
+        [HttpGet("add-question/{testId}")]
         public IActionResult AddQuestion(int testId)
         {
             ViewBag.TestId = testId;
-            return View(); // створиш свою сторінку
+            return View();
+        }
+
+        [HttpPost("add-question")]
+        public async Task<IActionResult> AddQuestion(Question question)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.TestId = question.TestId;
+                return View(question);
+            }
+
+            _context.Questions.Add(question);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("ViewTest", new { id = question.TestId });
+        }
+
+        // [4] Додати відповідь до запитання
+        [HttpGet("add-answer/{questionId}")]
+        public IActionResult AddAnswer(int questionId)
+        {
+            var model = new AnswerViewModel
+            {
+                QuestionId = questionId
+            };
+            return View(model);
+        }
+
+        [HttpPost("add-answer")]
+        public async Task<IActionResult> AddAnswer(AnswerViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var answer = new Answer
+            {
+                QuestionId = model.QuestionId,
+                Text = model.Text,
+                IsCorrect = model.IsCorrect
+            };
+
+            _context.Answers.Add(answer);
+            await _context.SaveChangesAsync();
+
+            // Повернення назад до перегляду тесту
+            var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == model.QuestionId);
+            return RedirectToAction("ViewTest", new { id = question.TestId });
+        }
+
+        // [Додатково] Перегляд тесту з питаннями та відповідями
+        [HttpGet("view-test/{id}")]
+        public async Task<IActionResult> ViewTest(int id)
+        {
+            var test = await _context.Tests
+                .Include(t => t.Questions)
+                    .ThenInclude(q => q.Answers)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (test == null)
+                return NotFound();
+
+            return View("ViewTest", test);
         }
     }
 }

@@ -3,13 +3,11 @@
     public class Question
     {
         public int Id { get; set; }
-        public string Text { get; set; } = string.Empty;
-        public string? ImageUrl { get; set; }
+        public string Text { get; set; }
 
         public int TestId { get; set; }
-        public Test Test { get; set; } = null!;
+        public Test Test { get; set; }
 
         public ICollection<Answer> Answers { get; set; } = new List<Answer>();
-        public ICollection<Question> Questions { get; set; } = new List<Question>();
     }
 }
