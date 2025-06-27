@@ -16,8 +16,14 @@ namespace TestSystem.Controllers
             _context = context;
         }
 
-        // [1] Список усіх тестів
+        // ===== Головна сторінка вчителя =====
         [HttpGet("")]
+        public IActionResult Dashboard()
+        {
+            return View("TeacherDashboard");
+        }
+
+        // [1] Список усіх тестів
         [HttpGet("tests")]
         public async Task<IActionResult> AllTests()
         {
@@ -25,13 +31,14 @@ namespace TestSystem.Controllers
             return View("AllTests", tests);
         }
 
-        // [2] Створити тест
+        // [2] Створити тест (GET)
         [HttpGet("create-test")]
         public IActionResult CreateTest()
         {
             return View();
         }
 
+        // [2] Створити тест (POST) ✅ Додано за твоїм запитом
         [HttpPost("create-test")]
         public async Task<IActionResult> CreateTest(Test test)
         {
@@ -41,8 +48,11 @@ namespace TestSystem.Controllers
             _context.Tests.Add(test);
             await _context.SaveChangesAsync();
 
+            Console.WriteLine($"✅ Тест \"{test.Title}\" збережено в БД!");
+
             return RedirectToAction("AllTests");
         }
+
 
         // [3] Додати питання до тесту
         [HttpGet("add-question/{testId}")]
@@ -94,12 +104,11 @@ namespace TestSystem.Controllers
             _context.Answers.Add(answer);
             await _context.SaveChangesAsync();
 
-            // Повернення назад до перегляду тесту
             var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == model.QuestionId);
             return RedirectToAction("ViewTest", new { id = question.TestId });
         }
 
-        // [Додатково] Перегляд тесту з питаннями та відповідями
+        // [5] Перегляд тесту
         [HttpGet("view-test/{id}")]
         public async Task<IActionResult> ViewTest(int id)
         {

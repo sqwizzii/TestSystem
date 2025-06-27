@@ -7,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Додаємо Razor Pages
 builder.Services.AddRazorPages();
 
+
+
+
 // Додаємо DbContext з PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -38,5 +41,10 @@ app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Teacher}/{action=CreateTest}/{id?}");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Teacher}/{action=AllTests}/{id?}");
+
 
 app.Run();

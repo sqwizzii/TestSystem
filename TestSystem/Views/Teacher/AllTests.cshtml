@@ -2,7 +2,7 @@
 
 <h2>Список тестів</h2>
 
-<table>
+<table class="table">
     <thead>
         <tr>
             <th>ID</th>
@@ -17,7 +17,8 @@
                 <td>@test.Id</td>
                 <td>@test.Title</td>
                 <td>
-                    <a href="/teacher/add-question/@test.Id">Додати запитання</a>
+                    <a class="btn btn-sm btn-primary" href="/teacher/view-test/@test.Id">Переглянути</a>
+                    <a class="btn btn-sm btn-success" href="/teacher/add-question/@test.Id">Додати запитання</a>
                 </td>
             </tr>
         }

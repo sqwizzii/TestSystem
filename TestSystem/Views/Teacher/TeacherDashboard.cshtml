@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Кабінет Вчителя";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg rounded">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">👨‍🏫 Кабінет викладача</h3>
+        </div>
+        <div class="card-body">
+            <p class="mb-4">Оберіть дію:</p>
+
+            <div class="d-flex flex-column gap-3">
+                <a href="/teacher/create-test" class="btn btn-success btn-lg" role="button">
+                    ➕ Створити новий тест
+                </a>
+
+                <a href="/teacher/tests" class="btn btn-primary btn-lg" role="button">
+                    📋 Переглянути усі тести
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
