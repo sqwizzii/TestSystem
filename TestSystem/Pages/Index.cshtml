@@ -1,10 +1,15 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Список тестів";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Список тестів</h2>
+
+@foreach (var test in Model.Tests)
+{
+    <div class="card mb-2 p-3">
+        <h5>@test.Title</h5>
+        <a class="btn btn-primary" asp-page="/Test/Take" asp-route-id="@test.Id">Пройти</a>
+    </div>
+}
