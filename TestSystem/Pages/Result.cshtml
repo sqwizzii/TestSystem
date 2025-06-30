@@ -1,0 +1,10 @@
+﻿@page
+@model TestSystem.Pages.ResultModel
+@{
+    ViewData["Title"] = "Результат";
+    Layout = "_Layout";
+}
+
+<h2>@TempData["Result"]</h2>
+<a class="btn btn-primary" asp-page="/Index">Повернутись до тестів</a>
+

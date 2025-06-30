@@ -1,4 +1,4 @@
-﻿@page "{id:int}"
+﻿@* @page "{id:int}"
 @using TestSystem.Models;
 @model TakeModel
 @{
@@ -37,4 +37,47 @@
     }
 
     <button type="submit" class="btn btn-success">Надіслати відповіді</button>
+</form> *@
+
+@page "{id:int}"
+@using TestSystem.Models;
+@model TakeModel
+@{
+    ViewData["Title"] = "Проходження тесту";
+    Layout = "_Layout";
+}
+
+<h2>@Model.Test.Title</h2>
+
+<form method="post">
+    @for (int i = 0; i < Model.Test.Questions.Count; i++)
+    {
+        var q = Model.Test.Questions[i];
+        <div class="mb-4">
+            <strong>@(i + 1). @q.Text</strong>
+
+            @if (q.Type == QuestionType.SingleChoice)
+            {
+                foreach (var answer in q.Answers)
+                {
+                    <div>
+                        <input type="radio" name="Answers[@q.Id]" value="@answer.Id" />
+                        <label>@answer.Text</label>
+                    </div>
+                }
+            }
+            else if (q.Type == QuestionType.MultipleChoice)
+            {
+                foreach (var answer in q.Answers)
+                {
+                    <div>
+                        <input type="checkbox" name="Answers[@q.Id]" value="@answer.Id" />
+                        <label>@answer.Text</label>
+                    </div>
+                }
+            }
+        </div>
+    }
+
+    <button type="submit" class="btn btn-success">Надіслати</button>
 </form>
